@@ -18,7 +18,7 @@ Generated file:
 
 version: 2.1
 jobs:
-  tests:
+  scan:
     steps:
       - checkout
       - run: sudo apt-get update && sudo apt-get install -y curl unzip
@@ -39,7 +39,7 @@ jobs:
 workflows:
   dagger:
     jobs:
-      - tests
+      - scan
 
 ```
 
