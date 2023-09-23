@@ -34,7 +34,7 @@ dagger run fluentci .
 | ----------------------- | ------------------------------------------------- |
 | GRYPE_IMAGE             | The image to scan                                 |
 | GRYPE_VERSION           | The version of Grype to use. Defaults to `latest` |
-| GRYPE_FAIL_ON           | set the return code to 1 if a vulnerability is found with a severity >= the given severity, options=[negligible low medium high critical] |
+| GRYPE_FAIL_ON           | Set the return code to 1 if a vulnerability is found with a severity >= the given severity. Possible values: `negligible`, `low`, `medium`, `high`, `critical` |
 
 ## Jobs
 
