@@ -23,4 +23,4 @@ jobs:
       - name: Run Dagger Pipelines
         run: dagger run deno run -A ./src/dagger/runner.ts
         env:
-          GRYPE_IMAGE: snyk/snyk:alpine
+          GRYPE_IMAGE: hashicorp/terraform
