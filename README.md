@@ -51,7 +51,7 @@ scan(failOn: String!, image: String!, src: String!): String
 You can also use this pipeline programmatically:
 
 ```ts
-import { scan } from "https://pkg.fluentci.io/grype_pipeline@v0.2.1/mod.ts";
+import { scan } from "https://pkg.fluentci.io/grype_pipeline@v0.3.0/mod.ts";
 
 await scan();
 ```
