@@ -1,5 +1,5 @@
 {
   grype {
-    scan(src: ".", image: "hashicorp/terraform", failOn: "high")
+    scan(src: ".", image: "hashicorp/terraform", failOn: "critical")
   }
 }
