@@ -28,6 +28,15 @@ Now you can run the pipeline with:
 dagger run fluentci .
 ```
 
+## Dagger Module
+
+Use as a [Dagger](https://dagger.io) Module:
+
+```bash
+dagger mod install github.com/fluent-ci-templates/grype-pipeline@mod
+```
+
+
 ## Environment variables
 
 | Variable                | Description                                       |
@@ -42,8 +51,12 @@ dagger run fluentci .
 | -------- | ---------------------------- |
 | scan     | Scan for vulnerabilities     |
 
-```graphql
-scan(failOn: String!, image: String!, src: String!): String
+```typescript
+scan(
+  src: Directory | string,
+  image?: string,
+  failOn?: string
+): Promise<string>
 ```
 
 ## Programmatic usage
@@ -53,5 +66,5 @@ You can also use this pipeline programmatically:
 ```ts
 import { scan } from "https://pkg.fluentci.io/grype_pipeline@v0.3.0/mod.ts";
 
-await scan();
+await scan(".");
 ```

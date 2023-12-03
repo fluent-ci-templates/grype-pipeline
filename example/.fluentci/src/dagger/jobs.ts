@@ -1,4 +1,6 @@
-import Client, { connect } from "../../deps.ts";
+import Client, { Directory } from "../../deps.ts";
+import { connect } from "../../sdk/connect.ts";
+import { getDirectory } from "./lib.ts";
 
 export enum Job {
   scan = "scan",
@@ -8,11 +10,22 @@ export const exclude = [".git", ".fluentci", ".devbox"];
 
 const GRYPE_VERSION = Deno.env.get("GRYPE_VERSION") || "latest";
 
-export const scan = async (src = ".", image?: string, failOn?: string) => {
+/**
+ * @function
+ * @description Scan a directory or image for vulnerabilities
+ * @param {Directory | string} src The context directory
+ * @param {string} [image] The image to scan
+ * @returns {Promise<string>}
+ */
+export async function scan(
+  src: Directory | string,
+  image?: string,
+  failOn?: string
+): Promise<string> {
   await connect(async (client: Client) => {
     const GRYPE_IMAGE = Deno.env.get("GRYPE_IMAGE") || image || `dir:${src}`;
     const GRYPE_FAIL_ON = Deno.env.get("GRYPE_FAIL_ON") || failOn;
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     let args = [GRYPE_IMAGE];
 
     if (GRYPE_FAIL_ON) {
@@ -33,22 +46,13 @@ export const scan = async (src = ".", image?: string, failOn?: string) => {
     console.log(result);
   });
   return "Done";
-};
+}
 
 export type JobExec = (
-  src?: string,
+  src: Directory | string,
   image?: string,
   failOn?: string
-) =>
-  | Promise<string>
-  | ((
-      src?: string,
-      image?: string,
-      failOn?: string,
-      options?: {
-        ignore: string[];
-      }
-    ) => Promise<string>);
+) => Promise<string>;
 
 export const runnableJobs: Record<Job, JobExec> = {
   [Job.scan]: scan,

@@ -7,12 +7,12 @@ export default async function pipeline(src = ".", args: string[] = []) {
   if (Deno.env.has("FLUENTCI_SESSION_ID")) {
     await uploadContext(src, exclude);
   }
-    if (args.length > 0) {
-      await runSpecificJobs(src, args as jobs.Job[]);
-      return;
-    }
+  if (args.length > 0) {
+    await runSpecificJobs(src, args as jobs.Job[]);
+    return;
+  }
 
-    await scan(src);
+  await scan(src);
 }
 
 async function runSpecificJobs(src: string, args: jobs.Job[]) {
