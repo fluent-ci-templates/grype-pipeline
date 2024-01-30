@@ -1,5 +1,4 @@
-import Client, { Directory } from "../../deps.ts";
-import { connect } from "../../sdk/connect.ts";
+import { Directory, dag } from "../../deps.ts";
 import { getDirectory } from "./lib.ts";
 
 export enum Job {
@@ -22,30 +21,26 @@ export async function scan(
   image?: string,
   failOn?: string
 ): Promise<string> {
-  await connect(async (client: Client) => {
-    const GRYPE_IMAGE = Deno.env.get("GRYPE_IMAGE") || image || `dir:${src}`;
-    const GRYPE_FAIL_ON = Deno.env.get("GRYPE_FAIL_ON") || failOn;
-    const context = getDirectory(client, src);
-    let args = [GRYPE_IMAGE];
+  const GRYPE_IMAGE = Deno.env.get("GRYPE_IMAGE") || image || `dir:${src}`;
+  const GRYPE_FAIL_ON = Deno.env.get("GRYPE_FAIL_ON") || failOn;
+  const context = await getDirectory(dag, src);
+  let args = [GRYPE_IMAGE];
 
-    if (GRYPE_FAIL_ON) {
-      args = args.concat(["--fail-on", GRYPE_FAIL_ON]);
-    }
+  if (GRYPE_FAIL_ON) {
+    args = args.concat(["--fail-on", GRYPE_FAIL_ON]);
+  }
 
-    const ctr = client
-      .pipeline(Job.scan)
-      .container()
-      .from(`anchore/grype:${GRYPE_VERSION}`)
-      .withMountedCache("/root/.cache/grype", client.cacheVolume("grype-cache"))
-      .withDirectory("/app", context, { exclude })
-      .withWorkdir("/app")
-      .withExec(args);
+  const ctr = dag
+    .pipeline(Job.scan)
+    .container()
+    .from(`anchore/grype:${GRYPE_VERSION}`)
+    .withMountedCache("/root/.cache/grype", dag.cacheVolume("grype-cache"))
+    .withDirectory("/app", context, { exclude })
+    .withWorkdir("/app")
+    .withExec(args);
 
-    const result = await ctr.stdout();
-
-    console.log(result);
-  });
-  return "Done";
+  const result = await ctr.stdout();
+  return result;
 }
 
 export type JobExec = (

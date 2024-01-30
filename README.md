@@ -11,7 +11,7 @@ A ready-to-use CI/CD Pipeline for scanning vulnerabilities in your project with 
 Run the following command:
 
 ```bash
-dagger run fluentci grype_pipeline
+fluentci run grype_pipeline
 ```
 
 Or, if you want to use it as a template:
@@ -25,7 +25,7 @@ This will create a `.fluentci` folder in your project.
 Now you can run the pipeline with:
 
 ```bash
-dagger run fluentci .
+fluentci run .
 ```
 
 ## Dagger Module
@@ -64,7 +64,7 @@ scan(
 You can also use this pipeline programmatically:
 
 ```ts
-import { scan } from "https://pkg.fluentci.io/grype_pipeline@v0.4.0/mod.ts";
+import { scan } from "https://pkg.fluentci.io/grype_pipeline@v0.4.1/mod.ts";
 
 await scan(".");
 ```
