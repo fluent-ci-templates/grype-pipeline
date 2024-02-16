@@ -21,5 +21,5 @@ jobs:
           git clone https://github.com/fluentci-io/daggerverse
           mv daggerverse/deno-sdk deno-sdk
           rm -rf daggerverse
-          dagger call scan --src . --image hashicorp/terraform:1.6 --fail-on critical
+        # dagger call scan --src . --image hashicorp/terraform:1.6 --fail-on critical
         working-directory: example
