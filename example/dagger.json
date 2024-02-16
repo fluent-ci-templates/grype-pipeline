@@ -1,4 +1,4 @@
 {
   "name": "grype",
-  "sdk": "github.com/fluentci-io/daggerverse/deno-sdk@main"
+  "sdk": "./deno-sdk"
 }

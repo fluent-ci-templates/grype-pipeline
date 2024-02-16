@@ -1,5 +1,0 @@
-{
-  grype {
-    scan(src: ".", image: "snyk/snyk:alpine", failOn: "high")
-  }
-}
