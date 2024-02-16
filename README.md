@@ -42,6 +42,8 @@ dagger mod install github.com/fluent-ci-templates/grype-pipeline@mod
 | Variable                | Description                                       |
 | ----------------------- | ------------------------------------------------- |
 | GRYPE_IMAGE             | The image to scan                                 |
+| GRYPE_DIR               | The directory to scan                              |
+| GRYPE_SBOM              | The SBOM file to scan                              |
 | GRYPE_VERSION           | The version of Grype to use. Defaults to `latest` |
 | GRYPE_FAIL_ON           | Set the return code to 1 if a vulnerability is found with a severity >= the given severity. Possible values: `negligible`, `low`, `medium`, `high`, `critical` |
 
@@ -64,7 +66,7 @@ scan(
 You can also use this pipeline programmatically:
 
 ```ts
-import { scan } from "https://pkg.fluentci.io/grype_pipeline@v0.4.1/mod.ts";
+import { scan } from "https://pkg.fluentci.io/grype_pipeline@v0.4.2/mod.ts";
 
 await scan(".");
 ```
