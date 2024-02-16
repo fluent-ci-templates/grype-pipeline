@@ -21,10 +21,20 @@ export async function scan(
   image?: string,
   failOn?: string
 ): Promise<string> {
-  const GRYPE_IMAGE = Deno.env.get("GRYPE_IMAGE") || image || `dir:${src}`;
+  const GRYPE_IMAGE =
+    Deno.env.get("GRYPE_IMAGE") ||
+    Deno.env.get("GRYPE_DIR") ||
+    Deno.env.get("GRYPE_SBOM") ||
+    image ||
+    `dir:${src}`;
   const GRYPE_FAIL_ON = Deno.env.get("GRYPE_FAIL_ON") || failOn;
   const context = await getDirectory(dag, src);
-  let args = [GRYPE_IMAGE];
+  let args = [
+    Deno.env.has("GRYPE_SBOM") &&
+    !Deno.env.get("GRYPE_SBOM")!.startsWith("sbom:")
+      ? `sbom:${Deno.env.get("GRYPE_SBOM")}`
+      : GRYPE_IMAGE,
+  ];
 
   if (GRYPE_FAIL_ON) {
     args = args.concat(["--fail-on", GRYPE_FAIL_ON]);

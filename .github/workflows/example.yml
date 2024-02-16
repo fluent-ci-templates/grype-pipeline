@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -17,10 +20,19 @@ jobs:
         run: deno install -A -r https://cli.fluentci.io -n fluentci
       - name: Setup Dagger
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.9.7 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.9.10 sh
           sudo mv bin/dagger /usr/local/bin
           dagger version
-      - name: Run Dagger Pipelines
+      - name: Scan for vulnerabilities (image)
         run: dagger run deno run -A ./src/dagger/runner.ts
         env:
           GRYPE_IMAGE: hashicorp/terraform
+      - name: Scan for vulnerabilities (sbom)
+        run: |
+          fluentci run syft_pipeline
+          dagger run deno run -A ./src/dagger/runner.ts
+        env:
+          SYFT_IMAGE: hashicorp/terraform:1.6
+          SYFT_OUTPUT_FILE: syft.json
+          SYFT_OUTPUT_FORMAT: syft-json
+          GRYPE_SBOM: syft.json

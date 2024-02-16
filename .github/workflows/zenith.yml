@@ -13,10 +13,13 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup Dagger Zenith
         run: |
-          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.9.7 sh
+          curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.9.10 sh
           sudo mv bin/dagger /usr/local/bin
           dagger version
       - name: Run Dagger Pipelines
         run: |
+          git clone https://github.com/fluentci-io/daggerverse
+          mv daggerverse/deno-sdk deno-sdk
+          rm -rf daggerverse
           dagger call scan --src . --image hashicorp/terraform:1.6 --fail-on critical
         working-directory: example

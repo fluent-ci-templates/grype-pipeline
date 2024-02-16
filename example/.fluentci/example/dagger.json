@@ -1,5 +1,0 @@
-{
-  "root": "",
-  "name": "grype",
-  "sdkRuntime": "tsiry/dagger-sdk-deno"
-}
