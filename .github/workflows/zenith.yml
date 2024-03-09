@@ -17,5 +17,5 @@ jobs:
           sudo mv bin/dagger /usr/local/bin
           dagger version
       - name: Run Dagger Pipelines
-        run: dagger call scan --image hashicorp/terraform:1.6 --fail-on critical
+        run: dagger call scan --src . --image hashicorp/terraform:1.6 --fail-on critical
         working-directory: example
