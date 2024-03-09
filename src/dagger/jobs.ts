@@ -1,4 +1,9 @@
-import { Directory, dag } from "../../deps.ts";
+/**
+ * @module grype
+ * @description This module provides a set of functions to scan a directory or image for vulnerabilities using Grype.
+ */
+
+import { Directory, dag, env } from "../../deps.ts";
 import { getDirectory } from "./lib.ts";
 
 export enum Job {
@@ -7,9 +12,11 @@ export enum Job {
 
 export const exclude = [".git", ".fluentci", ".devbox"];
 
-const GRYPE_VERSION = Deno.env.get("GRYPE_VERSION") || "latest";
+const GRYPE_VERSION = env.get("GRYPE_VERSION") || "latest";
 
 /**
+ * Scan a directory or image for vulnerabilities
+ *
  * @function
  * @description Scan a directory or image for vulnerabilities
  * @param {Directory | string} src The context directory
@@ -22,17 +29,16 @@ export async function scan(
   failOn?: string
 ): Promise<string> {
   const GRYPE_IMAGE =
-    Deno.env.get("GRYPE_IMAGE") ||
-    Deno.env.get("GRYPE_DIR") ||
-    Deno.env.get("GRYPE_SBOM") ||
+    env.get("GRYPE_IMAGE") ||
+    env.get("GRYPE_DIR") ||
+    env.get("GRYPE_SBOM") ||
     image ||
     `dir:${src}`;
-  const GRYPE_FAIL_ON = Deno.env.get("GRYPE_FAIL_ON") || failOn;
-  const context = await getDirectory(dag, src);
+  const GRYPE_FAIL_ON = env.get("GRYPE_FAIL_ON") || failOn;
+  const context = await getDirectory(src);
   let args = [
-    Deno.env.has("GRYPE_SBOM") &&
-    !Deno.env.get("GRYPE_SBOM")!.startsWith("sbom:")
-      ? `sbom:${Deno.env.get("GRYPE_SBOM")}`
+    env.has("GRYPE_SBOM") && !env.get("GRYPE_SBOM")!.startsWith("sbom:")
+      ? `sbom:${env.get("GRYPE_SBOM")}`
       : GRYPE_IMAGE,
   ];
 
@@ -49,8 +55,7 @@ export async function scan(
     .withWorkdir("/app")
     .withExec(args);
 
-  const result = await ctr.stdout();
-  return result;
+  return ctr.stdout();
 }
 
 export type JobExec = (
