@@ -19,7 +19,7 @@ jobs:
           wasm: true
           plugin: .
           args: |
-            scan hashicorp/terraform:1.6 --fail-on critical
+            scan hashicorp/terraform:1.8 --fail-on critical
           working-directory: example
       - name: Scan for vulnerabilities (image)
         run: dagger run deno run -A ./src/dagger/runner.ts
